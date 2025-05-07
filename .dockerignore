@@ -1,0 +1,16 @@
+# Ignore IDE configs, logs, etc.
+*.iml
+*.log
+*.tmp
+*.lnk
+Thumbs.db
+.DS_Store
+
+# Ignore all target build output except the final JAR
+target/*
+!target/*.jar
+
+# Ignore everything from OneDrive sync metadata (sometimes causes trouble)
+*.ini
+desktop.ini
+
