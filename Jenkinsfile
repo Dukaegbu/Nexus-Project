@@ -2,9 +2,9 @@ def build
 
 pipeline {
     agent any
-    environment {
-        New
-    }
+    // environment {
+    //     New
+    // }
     stages {
         stage('init') {
             steps {
