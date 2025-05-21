@@ -1,10 +1,10 @@
 def buildApp() {
     echo 'building the application...'
 }
-def test() {
+def testApp() {
     echo 'testing the application...'
 }
-def deploy() {
+def deployApp() {
     echo 'deploying the application...'
 }
 return this
