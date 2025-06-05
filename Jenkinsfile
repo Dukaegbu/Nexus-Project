@@ -1,3 +1,4 @@
+@library('jenkins-shared-library')
 def gv
 
 pipeline {
@@ -17,40 +18,42 @@ pipeline {
         }
 
         stage('build jar') {
-            when {
-                    expression {
-                        BRANCH_NAME == 'main'
-                    }
-                }
+            // when {
+            //         expression {
+            //             BRANCH_NAME == 'main'
+            //         }
+            //     }
             steps {
-                script {
-                    gv.buildApp()
-                    sh 'mvn package'
-                }
+                buildJar()
+                // script {
+                //     gv.buildApp()
+                //     sh 'mvn package'
+                // }
             }
         }
 
         stage('building image') {
             steps {
-                when {
-                    expression {
-                        BRANCH_NAME == 'main'
-                    }
-                }
+                // when {
+                //     expression {
+                //         BRANCH_NAME == 'main'
+                //     }
+                // }
                 script {
-                    gv.buildImage()
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'dockerhub-creds',
-                            usernameVariable: 'USERNAME',
-                            passwordVariable: 'PASSWORD'
-                        )
-                    ])
-                    {
-                        sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
-                    }
+                    buildImage()
+                    // gv.buildImage()
+                    // withCredentials([
+                    //     usernamePassword(
+                    //         credentialsId: 'dockerhub-creds',
+                    //         usernameVariable: 'USERNAME',
+                    //         passwordVariable: 'PASSWORD'
+                    //     )
+                    // ])
+                    // {
+                    //     sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
+                    //     sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                    //     sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
+                    // }
                 }
             }
         }
