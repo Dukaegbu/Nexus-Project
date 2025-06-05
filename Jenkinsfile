@@ -5,9 +5,7 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
-    // environment {
-    //     New
-    // }
+    
     stages {
         stage('init') {
             steps {
@@ -28,11 +26,14 @@ pipeline {
             steps {
                 script {
                     gv.buildImage()
-                    withCredentials([usernamePassword(credentialsID:'dockerhub-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')])
-                    sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
-                    sh 'echo $PASSWORD | docker login -u $USER --password-stdin'
-                    sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
-                }   
+                    withCredentials(
+                        [usernamePassword
+                        (credentialsID:'dockerhub-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) 
+                        {
+                        sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
+                        sh 'echo $PASSWORD | docker login -u $USER --password-stdin'
+                        sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
+                    }
             }
         }
         stage('test') {
