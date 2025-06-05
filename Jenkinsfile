@@ -17,6 +17,11 @@ pipeline {
         }
 
         stage('build jar') {
+            when {
+                    expression {
+                        BRANCH_NAME == 'MASTER'
+                    }
+                }
             steps {
                 script {
                     gv.buildApp()
@@ -27,6 +32,11 @@ pipeline {
 
         stage('building image') {
             steps {
+                when {
+                    expression {
+                        BRANCH_NAME == 'MASTER'
+                    }
+                }
                 script {
                     gv.buildImage()
                     withCredentials([
