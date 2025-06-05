@@ -19,7 +19,7 @@ pipeline {
         stage('build jar') {
             when {
                     expression {
-                        BRANCH_NAME == 'MASTER'
+                        BRANCH_NAME == 'main'
                     }
                 }
             steps {
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 when {
                     expression {
-                        BRANCH_NAME == 'MASTER'
+                        BRANCH_NAME == 'main'
                     }
                 }
                 script {
