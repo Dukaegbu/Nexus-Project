@@ -2,10 +2,11 @@ def gv
 
 pipeline {
     agent any
+
     tools {
         maven 'maven-3.9'
     }
-    
+
     stages {
         stage('init') {
             steps {
@@ -14,6 +15,7 @@ pipeline {
                 }
             }
         }
+
         stage('build jar') {
             steps {
                 script {
@@ -22,20 +24,27 @@ pipeline {
                 }
             }
         }
+
         stage('building image') {
             steps {
                 script {
                     gv.buildImage()
-                    withCredentials(
-                        [usernamePassword
-                        (credentialsID:'dockerhub-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) 
-                        {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerhub-creds',
+                            usernameVariable: 'USERNAME',
+                            passwordVariable: 'PASSWORD'
+                        )
+                    ])
+                    {
                         sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
-                        sh 'echo $PASSWORD | docker login -u $USER --password-stdin'
+                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
                         sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
                     }
+                }
             }
         }
+
         stage('test') {
             steps {
                 script {
@@ -43,12 +52,13 @@ pipeline {
                 }
             }
         }
+
         stage('deploy') {
             input {
-                message "select the env to deploy"
-                ok "Done"
-                parameters{
-                    choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+                message 'select the env to deploy'
+                ok 'Done'
+                parameters {
+                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')
                 }
             }
             steps {
