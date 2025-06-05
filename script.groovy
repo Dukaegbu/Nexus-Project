@@ -1,5 +1,8 @@
 def buildApp() {
-    echo 'building the application...'
+    echo 'building the Jar'
+}
+def buildImage() {
+    echo 'building Docker image'
 }
 def testApp() {
     echo 'testing the application...'

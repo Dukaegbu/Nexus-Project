@@ -2,6 +2,9 @@ def gv
 
 pipeline {
     agent any
+    tools {
+        maven 'maven-3.9'
+    }
     // environment {
     //     New
     // }
@@ -13,11 +16,23 @@ pipeline {
                 }
             }
         }
-        stage('build') {
+        stage('build jar') {
             steps {
                 script {
                     gv.buildApp()
+                    sh 'mvn package'
                 }
+            }
+        }
+        stage('building image') {
+            steps {
+                script {
+                    gv.buildImage()
+                    withCredentials([usernamePassword(credentialsID:'dockerhub-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')])
+                    sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
+                    sh 'echo $PASSWORD | docker login -u $USER --password-stdin'
+                    sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
+                }   
             }
         }
         stage('test') {
