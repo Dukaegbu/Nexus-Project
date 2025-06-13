@@ -24,10 +24,10 @@ pipeline {
                 script {
                     echo 'incrementing version'
                     sh '''
-                        mvn build-helper:parse-version
-                        mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=parsedVersion.nextIncrementalVersion -q -DforceStdout)
-                        mvn versions:commit
-                     '''
+                        mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\${parsedVersion.majorVersion}.\\${parsedVersion.minorVersion}.\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit
+                       '''
                     matcher = readfile('pom.xml') =~ '<version>(.+)</version>'
                     version = [0][1]
                     env.imagename = "$version-$BUILD_NUMBER"
