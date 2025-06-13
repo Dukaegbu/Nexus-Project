@@ -19,17 +19,33 @@ pipeline {
             }
         }
 
+        stage(incremental version) {
+            steps {
+                script {
+                    echo 'incrementing version'
+                    sh '''
+                        mvn build-helper:parse-version
+                        mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=parsedVersion.nextIncrementalVersion -q -DforceStdout)
+                        mvn versions:commit
+                     '''
+                    matcher = readfile('pom.xml') =~ '<version>(.+)</version>'
+                    version = [0][1]
+                    env.imagename = "$version-$BUILD_NUMBER"
+                }
+            }
+        }
+
         stage('build jar') {
 
             steps {
                 script {
                     buildJar()
                 }
-                // buildJar()
-                // script {
-                //     gv.buildApp()
-                //     sh 'mvn package'
-                // }
+            // buildJar()
+            // script {
+            //     gv.buildApp()
+            //     sh 'mvn package'
+            // }
             }
         }
 
@@ -41,20 +57,21 @@ pipeline {
                 //     }
                 // }
                 script {
-                    buildImage 'dukaegbu/dbase-repo:myapp-2.0'
-                    // gv.buildImage()
-                    // withCredentials([
-                    //     usernamePassword(
-                    //         credentialsId: 'dockerhub-creds',
-                    //         usernameVariable: 'USERNAME',
-                    //         passwordVariable: 'PASSWORD'
-                    //     )
-                    // ])
-                    // {
-                    //     sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
-                    //     sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                    //     sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
-                    // }
+                    // buildImage 'dukaegbu/dbase-repo:myapp-2.0'
+                    buildImage()
+                // gv.buildImage()
+                // withCredentials([
+                //     usernamePassword(
+                //         credentialsId: 'dockerhub-creds',
+                //         usernameVariable: 'USERNAME',
+                //         passwordVariable: 'PASSWORD'
+                //     )
+                // ])
+                // {
+                //     sh 'docker build -t dukaegbu/dbase-repo:myapp-2.0 .'
+                //     sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                //     sh 'docker push dukaegbu/dbase-repo:myapp-2.0'
+                // }
                 }
             }
         }
