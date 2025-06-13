@@ -28,8 +28,8 @@ pipeline {
                         -DnewVersion=\\${parsedVersion.majorVersion}.\\${parsedVersion.minorVersion}.\\${parsedVersion.nextIncrementalVersion} \
                         versions:commit
                     '''
-                    matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
-                    version = matcher[0][1]
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
                     env.imagename = "${version}-${BUILD_NUMBER}"
                 }
             }
