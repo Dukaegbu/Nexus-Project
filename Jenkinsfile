@@ -26,7 +26,10 @@ pipeline {
             //         }
             //     }
             steps {
-                buildJar()
+                script {
+                    buildJar()
+                }
+                // buildJar()
                 // script {
                 //     gv.buildApp()
                 //     sh 'mvn package'
@@ -42,7 +45,7 @@ pipeline {
                 //     }
                 // }
                 script {
-                    buildImage()
+                    buildImage 'dukaegbu/dbase-repo:myapp-2.0'
                     // gv.buildImage()
                     // withCredentials([
                     //     usernamePassword(
