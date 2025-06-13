@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage(incremental version) {
+        stage('incremental version') {
             steps {
                 script {
                     echo 'incrementing version'
@@ -27,13 +27,14 @@ pipeline {
                         mvn build-helper:parse-version versions:set \
                         -DnewVersion=\\${parsedVersion.majorVersion}.\\${parsedVersion.minorVersion}.\\${parsedVersion.nextIncrementalVersion} \
                         versions:commit
-                       '''
-                    matcher = readfile('pom.xml') =~ '<version>(.+)</version>'
-                    version = [0][1]
-                    env.imagename = "$version-$BUILD_NUMBER"
+                    '''
+                    matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    version = matcher[0][1]
+                    env.imagename = "${version}-${BUILD_NUMBER}"
                 }
             }
         }
+
 
         stage('build jar') {
 
