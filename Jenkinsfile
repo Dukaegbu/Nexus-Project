@@ -120,7 +120,7 @@ pipeline {
                         sh 'git status'
                         sh 'git branch'
                         sh 'git config --list'
-                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/Dukaegbu/Nexus-Project.git"
+                        sh 'git remote set-url origin https://$USERNAME:$PASSWORD@github.com/Dukaegbu/Nexus-Project.git'
                         sh 'git add .'
                         sh 'git commit -m "ci:version bump" || echo "No changes to commit"'
                         sh 'git push origin HEAD:jenkins-shared-pip'
