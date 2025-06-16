@@ -30,7 +30,7 @@ pipeline {
                     '''
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
-                    env.imagename = "${version}-${BUILD_NUMBER}"
+                    env.imagename = "dukaegbu/dbase-repo:${version}-${BUILD_NUMBER}"
                 }
             }
         }
