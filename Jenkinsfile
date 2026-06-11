@@ -4,20 +4,35 @@ pipeline {
         maven '3.9'
     }
     stages {
-        stage('build') {
+        stage('build jar') {
             steps {
-                echo 'Building Hello World'
+                script{
+                    echo "Building application"
+                    sh 'mvn package'
+                }
+                
             }
-        }
-       stage('test') {
-            steps {
-                echo 'testing'
+         }
+
+       stage('build image'){
+            steps{
+                script{
+                    echo "building image"
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable:'USER')]) {
+                        sh 'docker build -t dukaegbu/dbase-repo:Jma-2.0 .'
+                        sh 'echo "mypassword" | docker login -u "myusername" --password-stdin'
+                        sh ' docker push dukaegbu/dbase-repo:Jma-2.0'
+                    }
+                }
             }
-        }
+       }
        stage('deploy') {
             steps {
-                echo 'deploying'
+                script{
+                    echo "deploying application"
+                }
+                
             }
-        }
-    }
-}
+         } 
+    }     
+ }
