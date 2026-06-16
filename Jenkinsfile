@@ -1,5 +1,7 @@
+/* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
+
     tools {
         maven 'maven3.9'
     }
@@ -7,21 +9,22 @@ pipeline {
         stage('build jar') {
             steps {
                 script{
-                    echo "Building application"
+                    echo 'Building application'
                     sh 'mvn package'
                 }
-                
             }
          }
 
        stage('build image'){
             steps{
                 script{
-                    echo "building image"
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable:'USER')]) {
-                        sh 'docker build -t dukaegbu/dbase-repo:Jma-2.0 .'
-                        sh 'echo "mypassword" | docker login -u "myusername" --password-stdin'
-                        sh ' docker push dukaegbu/dbase-repo:Jma-2.0'
+                    echo 'building image'
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'DOCKER_PASS', usernameVariable:'DOCKER_USER')]) {
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker build -t dukaegbu/dbase-repo:jma-2.0 .
+                            docker push dukaegbu/dbase-repo:jma-2.0
+                        '''
                     }
                 }
             }
@@ -29,10 +32,9 @@ pipeline {
        stage('deploy') {
             steps {
                 script{
-                    echo "deploying application"
+                    echo 'deploying application'
                 }
-                
             }
-         } 
-    }     
+         }
+    }
  }
