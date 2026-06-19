@@ -31,7 +31,7 @@ pipeline {
        }
        stage('deploy') {
             when {
-                BRANCH_NAME == 'main'
+                BRANCH_NAME == 'develop'
             }
             
             steps {
