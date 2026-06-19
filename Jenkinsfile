@@ -31,9 +31,11 @@ pipeline {
        }
        stage('deploy') {
             when {
-                BRANCH_NAME == 'develop'
+                expression {
+                    BRANCH_NAME == 'develop'
+                }
             }
-            
+
             steps {
                 script{
                     echo 'deploying application'
