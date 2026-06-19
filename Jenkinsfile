@@ -30,6 +30,10 @@ pipeline {
             }
        }
        stage('deploy') {
+            when {
+                BRANCH_NAME == 'main'
+            }
+            
             steps {
                 script{
                     echo 'deploying application'
